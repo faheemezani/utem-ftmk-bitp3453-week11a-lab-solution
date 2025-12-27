@@ -103,6 +103,6 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 ---
 **Maintained by:** <br>
-Muhammad Faheem Mohd Ezani / [faheemezani] <br>
+Muhammad Faheem Mohd Ezani / [faheemezani]( <br>
 [Mohd Hariz Naim @ Mohayat/mhariznaim] <br>
 [Amirul Ramzani Razdid/amirulramzani-hub]
