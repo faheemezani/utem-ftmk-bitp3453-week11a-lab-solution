@@ -102,6 +102,7 @@ This project was developed for academic purposes under the **Mobile Application 
 Distributed under the **MIT License**. See `LICENSE` for more information.
 
 ---
-**Maintained by:** 
+**Maintained by:** <br>
 [Muhammad Faheem Mohd Ezani/faheemezani] <br>
-[Mohd Hariz Naim @ Mohayat/mhariznaim]
+[Mohd Hariz Naim @ Mohayat/mhariznaim] <br>
+[Amirul Ramzani Razdid/amirulramzani-hub]
