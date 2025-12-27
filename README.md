@@ -41,6 +41,7 @@ This repository provides a suggested solution for an Android application designe
 As of Android 10 (API level 29), users must grant physical activity permissions.
 ```xml
 <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+```
 
 ### Core Logic: The Sensor Pipeline
 The application follows the standard Android Sensor Lifecycle to ensure battery efficiency and data accuracy:
