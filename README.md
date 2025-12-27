@@ -1,9 +1,7 @@
 # Lab 11a: Gait and Activity Tracker Using The Accelerometer Sensor
 
-**University:** Universiti Teknikal Malaysia Melaka (UTeM)
-
-**Subject:** Mobile Application Development (BITP 3453) 
-
+**University:** Universiti Teknikal Malaysia Melaka (UTeM) <br>
+**Subject:** Mobile Application Development (BITP 3453) <br>
 **Lab Assignment:** Development of a Multi-Sensor Pedometer & Gait Tracker
 
 ## 📌 Project Overview
