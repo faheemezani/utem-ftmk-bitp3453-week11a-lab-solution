@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Lab11a</string>
+    <string name="main_title">Gait Analysis Lab</string>
+    <string name="main_description">Real-time Motion Data Collection</string>
+    <string name="main_hardware_step_counter">HARDWARE STEP COUNTER</string>
+    <string name="main_default_step_value">0</string>
+    <string name="main_raw_accelerometer_magnitude">RAW ACCELEROMETER MAGNITUDE</string>
+    <string name="main_0_m_s">0 m/s²</string>
+    <string name="main_btn_start_tracking">START TRACKING</string>
 </resources>
