@@ -1,8 +1,9 @@
 # Lab 11a: Gait and Activity Tracker Using The Accelerometer Sensor
 
 **University:** Universiti Teknikal Malaysia Melaka (UTeM) <br>
+**Faculty:** Fakulti Teknologi Maklumat dan Komunikasi (FTMK) / Faculty of Information and Communications Technology <br>
 **Subject:** Mobile Application Development (BITP 3453) <br>
-**Lab Assignment:** Development of a Multi-Sensor Pedometer & Gait Tracker
+**Lab Assignment:** Lab 11a
 
 ## 📌 Project Overview
 This repository provides a suggested solution for an Android application designed to detect user movement and gait patterns. The project explores the Android `SensorManager` API, specifically comparing hardware-abstracted sensors against raw inertial data processing.
@@ -96,9 +97,11 @@ To successfully complete this lab, students should perform the following tests:
 ---
 
 ## 📝 Academic Integrity & License
-This project was developed for academic purposes under the **[Insert Subject Name]** curriculum at **[Insert University Name]**. 
+This project was developed for academic purposes under the **Mobile Application Development (BITP 3453)** curriculum at the **Universiti Teknikal Malaysia Melaka (UTeM)**. 
 
 Distributed under the **MIT License**. See `LICENSE` for more information.
 
 ---
-**Maintained by:** [Muhammad Faheem Mohd Ezani/faheemezani]
+**Maintained by:** 
+[Muhammad Faheem Mohd Ezani/faheemezani] <br>
+[Mohd Hariz Naim @ Mohayat/mhariznaim]
