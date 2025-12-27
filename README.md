@@ -1,2 +1,43 @@
-# Lab 11a Suggested Solution
-Lab guide solution for week 11a: Gait and Activity Tracker Using the Accelerometer Sensor.
+# Lab 11a: Gait and Activity Tracker Using The Accelerometer Sensor
+
+**University:** Universiti Teknikal Malaysia Melaka (UTeM)
+**Subject:** Mobile Application Development (BITP 3453) 
+**Lab Assignment:** Development of a Multi-Sensor Pedometer & Gait Tracker
+
+## 📌 Project Overview
+This repository provides a suggested solution for an Android application designed to detect user movement and gait patterns. The project explores the Android `SensorManager` API, specifically comparing hardware-abstracted sensors against raw inertial data processing.
+
+### Objectives
+* **Implement High-Level Sensors:** Interface with `TYPE_STEP_COUNTER` and `TYPE_STEP_DETECTOR`.
+* **Signal Processing:** Extract raw data from `TYPE_ACCELEROMETER` to calculate motion magnitude.
+* **Gait Logic:** Develop a threshold-based peak detection algorithm for manual step counting.
+* **Comparison:** Analyze the accuracy and power efficiency of different sensing methods.
+
+---
+
+## 🛠 Features
+
+### 1. Cumulative Step Counter (`TYPE_STEP_COUNTER`)
+* **Function:** Returns the total number of steps since the last system reboot.
+* **Logic:** Since this sensor cannot be reset programmatically, the app implements a "Session Offset" logic. Upon clicking "Start," the app captures the current sensor value as a baseline and subtracts it from all subsequent readings.
+
+### 2. Real-Time Step Detector (`TYPE_STEP_DETECTOR`)
+* **Function:** Triggers an event the moment a step is recognized.
+* **Logic:** Ideal for immediate UI feedback, such as a "footprint" animation or a haptic (vibration) pulse for every step taken.
+
+### 3. Manual Gait Analysis (`TYPE_ACCELEROMETER`)
+* **Function:** Measures raw acceleration forces on the $x$, $y$, and $z$ axes.
+* **Algorithm:** * **Vector Magnitude:** To remain independent of phone orientation, we calculate the Euclidean Norm:
+    $$||A|| = \sqrt{x^2 + y^2 + z^2}$$
+    * **Peak Detection:** The signal is processed to identify spikes that cross a dynamic threshold (typically $11.5 \text{ to } 12.5 \, m/s^2$), signaling a physical step.
+
+
+
+---
+
+## 📱 Technical Implementation
+
+### Permissions
+As of Android 10 (API level 29), users must grant physical activity permissions.
+```xml
+<uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
