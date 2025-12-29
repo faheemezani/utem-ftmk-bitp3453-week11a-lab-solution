@@ -74,19 +74,6 @@ The application follows the standard Android Sensor Lifecycle to ensure battery 
 
 ---
 
-## 📊 Lab Evaluation Tasks
-
-To successfully complete this lab, students should perform the following tests:
-
-| Task | Objective | Expected Result |
-| :--- | :--- | :--- |
-| **Precision Test** | Walk 50 steps exactly. | Compare `STEP_COUNTER` vs. `ACCELEROMETER` algorithm accuracy. |
-| **Noise Filtering** | Shake the phone vigorously in hand. | The Accelerometer count should increase, while the Hardware Step Counter should ignore non-gait motion. |
-| **Orientation Test** | Place phone in pocket vs. holding it flat. | The Magnitude formula should ensure steps are counted regardless of phone tilt. |
-| **Battery Analysis** | Run the app for 5 minutes in "High Frequency" mode. | Use the Android Profiler to see CPU/Battery spikes from raw accelerometer processing. |
-
----
-
 ## 📝 Academic Integrity & License
 This project was developed for academic purposes under the **Mobile Application Development (BITP 3453)** curriculum at the **Universiti Teknikal Malaysia Melaka (UTeM)**. 
 
