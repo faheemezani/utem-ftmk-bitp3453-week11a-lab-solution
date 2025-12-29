@@ -85,15 +85,6 @@ To successfully complete this lab, students should perform the following tests:
 | **Orientation Test** | Place phone in pocket vs. holding it flat. | The Magnitude formula should ensure steps are counted regardless of phone tilt. |
 | **Battery Analysis** | Run the app for 5 minutes in "High Frequency" mode. | Use the Android Profiler to see CPU/Battery spikes from raw accelerometer processing. |
 
-
-
----
-
-## 📂 Project Structure
-* `MainActivity.kt`: Handles UI updates and sensor lifecycle management.
-* `GaitAnalyzer.kt`: Contains the logic for the threshold-based peak detection algorithm.
-* `SensorService.kt`: (Optional) Background service implementation for persistent tracking.
-
 ---
 
 ## 📝 Academic Integrity & License
