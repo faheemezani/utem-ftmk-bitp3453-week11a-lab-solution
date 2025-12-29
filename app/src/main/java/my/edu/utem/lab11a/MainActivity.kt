@@ -10,6 +10,7 @@ import android.hardware.SensorEventListener
 import android.icu.text.DecimalFormat
 import android.os.Build
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -18,6 +19,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.sqrt
@@ -31,31 +33,45 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private var stepCounterSensor: Sensor? = null
     private var stepDetectorSensor: Sensor? = null
+    private var accelerometer: Sensor? = null
 
     // Use a sampling rate logic to ensure the UI doesn't work harder than the screen refresh
     private var lastUiUpdateTime = 0L
-
+    private var isFirstRead = true
+    private var isTracking = false
     private var permissionGranted = false
+    private var processingJob: Job? = null
+    private var lastStepCount: Int = 0
 
     private lateinit var tvStepCount: TextView
     private lateinit var accelBar: ProgressBar
     private lateinit var tvMagnitude: TextView
+    private lateinit var btnStart: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         executeRuntimePermission()
-        initializeUI()
-        initializeSensors()
+        initializeUI(savedInstanceState)
+
+        sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.apply {
+            putInt("SAVED_STEPS", tvStepCount.text.toString().toInt())
+            putBoolean("SAVED_TRACKING", isTracking)
+        }
+        super.onSaveInstanceState(outState)
     }
 
     override fun onResume() {
         super.onResume()
-        val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-
-        // The third parameter is the SENSOR_DELAY
-        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI)
+        if (isTracking) {
+            initializeSensors()
+            registerSensors()
+        }
     }
 
     override fun onPause() {
@@ -86,15 +102,51 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
     private fun initializeSensors() {
-        sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
         stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
         stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
     }
 
-    private fun initializeUI() {
+    private fun registerSensors() {
+        // Register STEP COUNTER
+//        stepCounterSensor?.let {
+//            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
+//        }
+
+        // Register STEP DETECTOR
+        stepDetectorSensor?.let {
+            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
+        }
+
+        // Register ACCELEROMETER
+        accelerometer?.let {
+            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
+        }
+    }
+
+    private fun initializeUI(savedInstanceState: Bundle?) {
         tvStepCount = findViewById(R.id.tvStepCount)
         accelBar = findViewById(R.id.accelBar)
         tvMagnitude = findViewById(R.id.tvMagnitude)
+        btnStart = findViewById(R.id.btnStart)
+
+        btnStart.setOnClickListener {
+            isTracking = !isTracking
+            if (isTracking) {
+                btnStart.text = "STOP TRACKING"
+                initializeSensors()
+                registerSensors()
+            } else {
+                btnStart.text = "START TRACKING"
+                sensorManager.unregisterListener(this)
+            }
+        }
+
+        savedInstanceState?.let {
+            isTracking = it.getBoolean("SAVED_TRACKING")
+            lastStepCount = it.getInt("SAVED_STEPS")
+            tvStepCount.text = lastStepCount.toString()
+        }
     }
 
     private fun executeRuntimePermission() {
@@ -128,6 +180,33 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             .start()
     }
 
+    private fun processAccelerometer(event: SensorEvent) {
+        val sensorValues = event.values?.copyOf() ?: return
+
+        // Use the 'launch' return value to prevent overlapping updates
+        // if a previous calculation is still running
+        if (processingJob?.isActive == true) return
+
+        // Offload the math to a background thread
+        processingJob = lifecycleScope.launch(Dispatchers.Default) {
+            // Perform math off-thread
+            val magnitude = calculateMagnitude(sensorValues)
+
+            val currentTime = System.currentTimeMillis()
+
+            // Limit UI refreshes to ~30 FPS (every 33ms)
+            // even if the sensor fires slightly faster than expected
+            if (currentTime - lastUiUpdateTime > 33) {
+                // Return to Main Thread for UI
+                withContext(Dispatchers.Main) {
+                    updateUI(magnitude)
+                }
+                lastUiUpdateTime = currentTime
+            }
+        }
+    }
+
+
     /**
      * SensorEventListener methods
      */
@@ -137,23 +216,21 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-        val sensorValues = event?.values?.copyOf() ?: return
+        event?: return
 
-        // Offload the math to a background thread
-        lifecycleScope.launch(Dispatchers.Default) {
-            val magnitude = calculateMagnitude(sensorValues)
-
-            // Return to Main Thread for UI
-            withContext(Dispatchers.Main) {
-                val currentTime = System.currentTimeMillis()
-
-                // Limit UI refreshes to ~30 FPS (every 33ms)
-                // even if the sensor fires slightly faster than expected
-                if (currentTime - lastUiUpdateTime > 33) {
-                    updateUI(magnitude)
-                    lastUiUpdateTime = currentTime
-                }
+        when (event.sensor.type) {
+            Sensor.TYPE_STEP_COUNTER -> {
+                //tvStepCount.text = event.values[0].toInt().toString()
+            }
+            Sensor.TYPE_STEP_DETECTOR -> {
+                if (isFirstRead) isFirstRead = false
+                else if (lastStepCount >= 0) lastStepCount += 1
+                tvStepCount.text = lastStepCount.toString()
+            }
+            Sensor.TYPE_ACCELEROMETER -> {
+                processAccelerometer(event)
             }
         }
+
     }
 }
