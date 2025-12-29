@@ -50,7 +50,7 @@ The application follows the standard Android Sensor Lifecycle to ensure battery 
 1.  **Request Permissions:** Check and request `ACTIVITY_RECOGNITION` at runtime.
 2.  **Register:** Initialize `sensorManager.registerListener()` during the `onResume()` or `onStart()` phase.
 3.  **Listen:** Capture data packets in `onSensorChanged()`.
-4.  **Process:** Apply the Euclidean Norm to accelerometer data to isolate movement from gravity.
+4.  **Process:** Apply some form of calculation to infer meaning (detect step) from the raw data.
 5.  **Unregister:** Call `sensorManager.unregisterListener()` in `onPause()` to prevent the sensor from draining the battery while the app is in the background.
 
 
